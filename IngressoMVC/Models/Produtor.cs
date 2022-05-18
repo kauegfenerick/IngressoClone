@@ -7,6 +7,8 @@ namespace IngressoMVC.Models
 {
     public class Produtor : Artista
     {
-        
+        #region Relacionamentos
+        public List<Filme> Filmes { get; set; }
+        #endregion
     }
 }

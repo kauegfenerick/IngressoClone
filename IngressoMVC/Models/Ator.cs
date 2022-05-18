@@ -8,5 +8,9 @@ namespace IngressoMVC.Models
 {
     public class Ator : Artista
     {
+        #region Relacionamentos
+        public List<AtorFilme> AtoresFilmes{ get; set; }
+
+        #endregion
     }
 }
