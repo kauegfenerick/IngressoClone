@@ -36,7 +36,7 @@ namespace IngressoMVC
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Shared/Error");
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -50,7 +50,7 @@ namespace IngressoMVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Atores}/{action=AtorListar}/{id?}");
             });
             InicializadorDeDados.Inicializar(app);
         }

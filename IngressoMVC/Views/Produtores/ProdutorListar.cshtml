@@ -1,9 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Atores";
+    ViewData["Title"] = "ProdutorListar";
 }
-@model IEnumerable<Ator> 
+@model IEnumerable<Produtor> 
 <div class="text-center">
-    <h1>Atores cadastrados</h1>
+    <h1>Produtores cadastrados</h1>
 </div>
     <div class="row">
         <a class="btn btn-dark" href="#">Cadastrar</a>
@@ -22,15 +22,15 @@
         </thead>
         <tbody>
                 @{
-                    foreach (var ator in Model)
+                    foreach (var produtor in Model)
                     {   <tr>
-                        <td><img src="@ator.FotoPerfilURL" alt="@ator.Nome" width="110"></td>
-                        <td>@ator.Nome</td>
-                        <td>@ator.Bio</td>
+                        <td><img src="@produtor.FotoPerfilURL" alt="@produtor.Nome" width="110"></td>
+                        <td>@produtor.Nome</td>
+                        <td>@produtor.Bio</td>
                         <td class="d-flex flex-column col-md-6 offset-3">
-                            <a class="btn btn-dark" asp-action="AtorAtualizar" asp-route-id="@ator.Id"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
-                            <a class="btn btn-dark mt-1" asp-action="AtorDetalhes" asp-route-id="@ator.Id"><i class="fa-solid fa-eye"></i> Ver</a>
-                            <a class="btn btn-danger mt-1" asp-action="AtorDeletar" asp-route-id="@ator.Id"><i class="fa-solid fa-trash"></i> Excluir</a>
+                            <a class="btn btn-dark" asp-action="ProdutorAtualizar" asp-route-id="@produtor.Id"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                            <a class="btn btn-dark mt-1" asp-action="ProdutorDetalhes" asp-route-id="@produtor.Id"><i class="fa-solid fa-eye"></i> Ver</a>
+                            <a class="btn btn-danger mt-1" asp-action="ProdutorDeletar" asp-route-id="@produtor.Id"><i class="fa-solid fa-trash"></i> Excluir</a>
                         </td>
                         </tr>
                     }
