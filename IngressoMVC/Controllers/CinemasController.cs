@@ -1,4 +1,6 @@
 ﻿using IngressoMVC.Data;
+using IngressoMVC.Models;
+using IngressoMVC.Models.ViewModels.Request;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -26,6 +28,18 @@ namespace IngressoMVC.Controllers
         public IActionResult CinemaCriar()
         {
             return View();
+        }
+        [HttpPost]
+        public IActionResult CinemaCriar(PostCinemaDTO cinemaDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(cinemaDto);
+            }
+            Cinema cinema = new Cinema(cinemaDto.Nome,cinemaDto.Descricacao,cinemaDto.LogoURL);
+            _context.Cinemas.Add(cinema);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(CinemaListar));
         }
         public IActionResult CinemaAtualizar(int id)
         {

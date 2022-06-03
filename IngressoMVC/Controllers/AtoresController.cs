@@ -32,6 +32,10 @@ namespace IngressoMVC.Controllers
         [HttpPost]
         public IActionResult AtorCriar(PostAtorDTO atorDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(atorDto);
+            }
             Ator ator = new Ator(atorDto.Nome, atorDto.FotoPerfilURL, atorDto.Bio);
             _context.Atores.Add(ator);
             _context.SaveChanges();
@@ -43,7 +47,20 @@ namespace IngressoMVC.Controllers
         }
         public IActionResult AtorDeletar(int id)
         {
-            return View();
+            var result = _context.Atores.FirstOrDefault(a => a.Id == id);
+            if (result == null)
+            {
+                return View();
+            }
+            return View(result);
+        }
+        [HttpDelete]
+        public IActionResult AtorConfirmarDeletar(int id)
+        {
+            var result = _context.Atores.FirstOrDefault(a => a.Id == id);
+            _context.Atores.Remove(result);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(AtorListar));
         }
     }
 }

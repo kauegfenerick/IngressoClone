@@ -1,4 +1,6 @@
 ﻿using IngressoMVC.Data;
+using IngressoMVC.Models;
+using IngressoMVC.Models.ViewModels.Request;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -26,6 +28,18 @@ namespace IngressoMVC.Controllers
         public IActionResult CategoriaCriar()
         {
             return View();
+        }
+        [HttpPost]
+        public IActionResult CategoriaCriar(PostCategoriaDTO categoriaDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(categoriaDto);
+            }
+            Categoria categoria = new Categoria(categoriaDto.Categoria);
+            _context.Categorias.Add(categoria);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(CategoriaListar));
         }
         public IActionResult CategoriaAtualizar(int id)
         {
