@@ -43,7 +43,26 @@ namespace IngressoMVC.Controllers
         }
         public IActionResult AtorAtualizar(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return View();
+            }
+            var result = _context.Atores.FirstOrDefault(a => a.Id == id);
+            if (result == null)
+            {
+                return View();
+            }
+
+            return View(result);
+        }
+        [HttpPost]
+        public ActionResult AtorAtualizarConfirmar(int id, PostAtorDTO atorDto)
+        {
+            var result = _context.Atores.FirstOrDefault(a => a.Id == id);
+            result.AtualizarDados(atorDto.Nome, atorDto.FotoPerfilURL,atorDto.Bio);
+            _context.Atores.Update(result);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(AtorListar));
         }
         public IActionResult AtorDeletar(int id)
         {
@@ -54,7 +73,7 @@ namespace IngressoMVC.Controllers
             }
             return View(result);
         }
-        [HttpDelete]
+        [HttpPost]
         public IActionResult AtorConfirmarDeletar(int id)
         {
             var result = _context.Atores.FirstOrDefault(a => a.Id == id);

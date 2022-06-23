@@ -1,23 +1,36 @@
 ﻿@model Ator
+
 @{
     ViewData["Title"] = "Deletar Ator";
 }
-<div class="row">
-    <div class="container">
-        <div class="col col-md-8 offset-4">
-            <h1>Deletar Ator</h1>
-        </div>
-        <div class="col col-md-4 offset-4 mt-3">
-                <label asp-for="Nome" class="label-control"></label><br>
-                <input placeholder="@Model.Nome" disabled class="label-control"><br>
-                <label asp-for="FotoPerfilURL" class="label-control"></label><br>
-                <img class="img-thumbnail" src="@Model.FotoPerfilURL" width="125" alt="@Model.Nome"><br>
-                <label asp-for="Bio" class="label-control"></label><br>
-                <input disabled placeholder="@Model.Bio" class="label-control"><br>
-                     <form asp-action="AtorConfirmarDeletar" asp-route-id="@Model.Id">
-                         <a asp-action="AtorConfirmarDeletar" class="btn btn-danger mt-2">Deletar</a>
+
+<div class="row text">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h1>Deletar Ator @Model.Nome</h1>
+        </p>
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <div class="form-group">
+                    <label asp-for="Nome" class="control-label"></label>
+                    <input asp-for="Nome" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Bio" class="control-label"></label>
+                    <input asp-for="Bio" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FotoPerfilURL" class="control-label"></label>
+                    <input asp-for="FotoPerfilURL" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <form asp-action="AtorConfirmarDeletar">
+                        <input type="hidden" asp-for="Id"/>
+                        <input type="submit" value="Confirmar" class="btn btn-outline-danger float-right" />
                     </form>
-                         <a asp-action="AtorListar" class="btn btn-dark mt-1">Listar</a>
+                    <a class="btn btn-outline-secondary" asp-action="AtorListar">Listar Todos</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
