@@ -43,11 +43,30 @@ namespace IngressoMVC.Controllers
         }
         public IActionResult ProdutorAtualizar(int id)
         {
-            return View();
+            var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
+            return View(result);
+        }
+        [HttpPost]
+        public IActionResult ProdutorAtualizar(int id, PostProdutorDTO produtorDto)
+        {
+            var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
+            result.AtualizarDados(produtorDto.Nome,produtorDto.FotoPerfilURL,produtorDto.Bio);
+            _context.Produtores.Update(result);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(ProdutorListar));
         }
         public IActionResult ProdutorDeletar(int id)
         {
-            return View();
+            var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
+            return View(result);
+        }
+        [HttpPost]
+        public IActionResult ProdutorDeletar(int id, PostProdutorDTO produtorDto)
+        {
+            var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
+            _context.Produtores.Remove(result);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(ProdutorListar));
         }
     }
 }
