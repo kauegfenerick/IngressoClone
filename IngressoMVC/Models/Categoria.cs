@@ -21,5 +21,7 @@ namespace IngressoMVC.Models
         #region Relacionamentos
         public List<FilmeCategoria> FilmesCategorias { get; set; }
         #endregion
+
+
     }
 }

@@ -47,7 +47,24 @@ namespace IngressoMVC.Controllers
         }
         public IActionResult CategoriaDeletar(int id)
         {
-            return View();
+            var result = _context.Categorias.FirstOrDefault(c => c.Id == id);
+            if (result == null)
+            {
+                return View("NotFound");
+            }
+            return View(result);
+        }
+        [HttpPost, ActionName("CategoriaDeletar")]
+        public IActionResult CategoriaDeletarConfirmar(int id)
+        {
+            var result = _context.Categorias.FirstOrDefault(c => c.Id == id);
+            if (result == null)
+            {
+                return View("NotFound");
+            }
+            _context.Categorias.Remove(result);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(CategoriaListar));
         }
     }
 }
