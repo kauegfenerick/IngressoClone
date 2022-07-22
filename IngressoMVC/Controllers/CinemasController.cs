@@ -43,11 +43,43 @@ namespace IngressoMVC.Controllers
         }
         public IActionResult CinemaAtualizar(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return View();
+            }
+            var result = _context.Cinemas.FirstOrDefault(a => a.Id == id);
+            if (result == null)
+            {
+                return View();
+            }
+
+            return View(result);
+        }
+         [HttpPost,ActionName("CinemaAtualizar")]
+        public IActionResult CinemaAtualizarConfirmar(int id, PostCinemaDTO cinemaDto)
+        {
+            var result = _context.Cinemas.FirstOrDefault(a => a.Id == id);
+            result.AtualizarDados(cinemaDto.Nome, cinemaDto.LogoURL, cinemaDto.Descricacao);
+            _context.Cinemas.Update(result);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(CinemaListar));
         }
         public IActionResult CinemaDeletar(int id)
         {
-            return View();
+            var result = _context.Cinemas.FirstOrDefault(c => c.Id == id);
+            if (result == null)
+            {
+                return View();
+            }
+            return View(result);
+        }
+        [HttpPost]
+        public IActionResult CinemaConfirmarDeletar(int id)
+        {
+            var result = _context.Cinemas.FirstOrDefault(c => c.Id == id);
+            _context.Cinemas.Remove(result);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(CinemaListar));
         }
     }
 }

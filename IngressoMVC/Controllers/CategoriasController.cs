@@ -36,14 +36,33 @@ namespace IngressoMVC.Controllers
             {
                 return View(categoriaDto);
             }
-            Categoria categoria = new Categoria(categoriaDto.Categoria);
+            Categoria categoria = new Categoria(categoriaDto.Nome);
             _context.Categorias.Add(categoria);
             _context.SaveChanges();
             return RedirectToAction(nameof(CategoriaListar));
         }
         public IActionResult CategoriaAtualizar(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return View();
+            }
+            var result = _context.Categorias.FirstOrDefault(a => a.Id == id);
+            if (result == null)
+            {
+                return View();
+            }
+
+            return View(result);
+        }
+         [HttpPost,ActionName("CategoriaAtualizar")]
+        public IActionResult CategoriaAtualizarConfirmar(int id, PostCategoriaDTO categoriaDto)
+        {
+            var result = _context.Categorias.FirstOrDefault(a => a.Id == id);
+            result.AtualizarDados(categoriaDto.Nome);
+            _context.Categorias.Update(result);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(CategoriaListar));
         }
         public IActionResult CategoriaDeletar(int id)
         {

@@ -11,24 +11,23 @@
         </p>
         <div class="row">
             <div class="col-md-8 offset-2">
+                <div>
+                    <img class="img-thumbnail" src="@Model.FotoPerfilURL" />
+                </div>
                 <div class="form-group">
                     <label asp-for="Nome" class="control-label"></label>
-                    <input asp-for="Nome" class="form-control"/>
+                    <input asp-for="Nome" class="form-control" disabled/>
                 </div>
                 <div class="form-group">
                     <label asp-for="Bio" class="control-label"></label>
-                    <input asp-for="Bio" class="form-control"/>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FotoPerfilURL" class="control-label"></label>
-                    <input asp-for="FotoPerfilURL" class="form-control" />
+                    <input asp-for="Bio" class="form-control" disabled/>
                 </div>
                 <div class="form-group">
                     <form asp-action="AtorConfirmarDeletar">
                         <input type="hidden" asp-for="Id"/>
                         <input type="submit" value="Confirmar" class="btn btn-outline-danger float-right" />
                     </form>
-                    <a class="btn btn-outline-secondary" asp-action="AtorListar">Listar Todos</a>
+                    <a class="btn btn-outline-secondary" asp-action="AtorListar">Cancelar</a>
                 </div>
             </div>
         </div>

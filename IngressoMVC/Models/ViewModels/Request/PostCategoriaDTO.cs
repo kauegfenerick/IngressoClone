@@ -8,8 +8,8 @@ namespace IngressoMVC.Models.ViewModels.Request
 {
     public class PostCategoriaDTO
     {
-        [Display(Name ="Categoria")]
-        [Required(ErrorMessage ="A categoria não pode ser vazia")]
-        public string Categoria { get; set; }
+        [Required, StringLength(50, MinimumLength = 1, ErrorMessage = "Campo Obrigatório")]
+        public string Nome { get; set; }
+
     }
 }

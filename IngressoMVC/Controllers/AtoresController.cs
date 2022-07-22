@@ -55,7 +55,7 @@ namespace IngressoMVC.Controllers
 
             return View(result);
         }
-        [HttpPost]
+        [HttpPost,ActionName("AtorAtualizar")]
         public IActionResult AtorAtualizarConfirmar(int id, PostAtorDTO atorDto)
         {
             var result = _context.Atores.FirstOrDefault(a => a.Id == id);

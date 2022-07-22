@@ -25,5 +25,13 @@ namespace IngressoMVC.Models
         #region Relacionamentos
         public List<Filme> Filmes { get; set; }
         #endregion
+
+         public void AtualizarDados(string nome, string logoUrl, string descricao)
+        {
+            Nome = nome;
+            LogoURL = logoUrl;
+            Descricao = descricao;
+            DataAlteracao = DateTime.Now;
+        }
     }
 }

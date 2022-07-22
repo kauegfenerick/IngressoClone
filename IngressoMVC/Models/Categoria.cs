@@ -22,6 +22,10 @@ namespace IngressoMVC.Models
         public List<FilmeCategoria> FilmesCategorias { get; set; }
         #endregion
 
-
+         public void AtualizarDados(string nome)
+        {
+            Nome = nome;
+            DataAlteracao = DateTime.Now;
+        }
     }
 }
