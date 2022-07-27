@@ -18,9 +18,9 @@ namespace IngressoMVC.Models
             Bio = bio;
         }
 
-        public int Id { get; set; }
-        public DateTime DataCadastro { get; set; }
-        public DateTime DataAlteracao { get; set; }
+        public int Id { get; private set; }
+        public DateTime DataCadastro { get; private set; }
+        public DateTime DataAlteracao { get; private set; }
         public string Nome { get; private set; }
         [Display(Name ="URL da foto de perfil")]
         public string FotoPerfilURL { get; private set; }

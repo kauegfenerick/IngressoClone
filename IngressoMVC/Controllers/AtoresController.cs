@@ -45,7 +45,7 @@ namespace IngressoMVC.Controllers
         {
             if (id == null)
             {
-                return View();
+                return View("NotFound");
             }
             var result = _context.Atores.FirstOrDefault(a => a.Id == id);
             if (result == null)

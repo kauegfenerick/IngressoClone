@@ -59,7 +59,7 @@ namespace IngressoMVC.Controllers
         public IActionResult CinemaAtualizarConfirmar(int id, PostCinemaDTO cinemaDto)
         {
             var result = _context.Cinemas.FirstOrDefault(a => a.Id == id);
-            result.AtualizarDados(cinemaDto.Nome, cinemaDto.LogoURL, cinemaDto.Descricacao);
+            result.AtualizarDados(cinemaDto.Nome, cinemaDto.Descricacao, cinemaDto.LogoURL);
             _context.Cinemas.Update(result);
             _context.SaveChanges();
             return RedirectToAction(nameof(CinemaListar));

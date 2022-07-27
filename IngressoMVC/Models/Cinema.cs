@@ -13,11 +13,13 @@ namespace IngressoMVC.Models
             Nome = nome;
             Descricao = descricao;
             LogoURL = logoURL;
+            DataCadastro = DateTime.Now;
+            DataAlteracao = DataCadastro;
         }
 
-        public int Id { get; set; }
-        public DateTime DataCadastro { get; set; }
-        public DateTime DataAlteracao { get; set; }
+        public int Id { get; private set; }
+        public DateTime DataCadastro { get; private set; }
+        public DateTime DataAlteracao { get; private set; }
         public string Nome { get; private set; }
         public string Descricao { get; private set; }
         public string LogoURL { get; private set; }
@@ -26,11 +28,11 @@ namespace IngressoMVC.Models
         public List<Filme> Filmes { get; set; }
         #endregion
 
-         public void AtualizarDados(string nome, string logoUrl, string descricao)
+         public void AtualizarDados(string nome, string descricao, string logoUrl)
         {
             Nome = nome;
-            LogoURL = logoUrl;
             Descricao = descricao;
+            LogoURL = logoUrl;
             DataAlteracao = DateTime.Now;
         }
     }

@@ -8,12 +8,15 @@ namespace IngressoMVC.Models
 {
     public class Filme : IEntidade
     {
-        public Filme(string titulo, string descricao, decimal preco, string imagemURL)
+        public Filme(string titulo, string descricao, decimal preco, string imagemURL,int produtorId)
         {
             Titulo = titulo;
             Descricao = descricao;
             Preco = preco;
             ImagemURL = imagemURL;
+            ProdutorId = produtorId;
+            DataCadastro = DateTime.Now;
+            DataAlteracao = DataCadastro;
         }
         public Filme(string titulo, string descricao, decimal preco, string imagemURL, int cinemaId ,int produtorId)
         {
@@ -21,13 +24,13 @@ namespace IngressoMVC.Models
             Descricao = descricao;
             Preco = preco;
             ImagemURL = imagemURL;
-            CinemaId = cinemaId;
             ProdutorId = produtorId;
+            CinemaId = cinemaId;
         }
 
-        public int Id { get; set; }
-        public DateTime DataCadastro { get; set; }
-        public DateTime DataAlteracao { get; set; }
+        public int Id { get; private set; }
+        public DateTime DataCadastro { get; private set; }
+        public DateTime DataAlteracao { get; private set; }
         public string Titulo { get; private set; }
         public string Descricao { get; private set; }
         public decimal Preco { get; private set; }
@@ -45,13 +48,17 @@ namespace IngressoMVC.Models
         public List<FilmeCategoria> FilmesCategorias { get; set; }
         #endregion
 
-        public void AlteraPreco(decimal novoPreco)
+        public void AlterarDados(string titulo, string descricao, decimal novoPreco, string imagem)
         {
-            if (novoPreco <= 0)
+            if (titulo.Length < 3 || novoPreco>0)
             {
                 return;
             }
+            Titulo = titulo;
+            Descricao = descricao;
             Preco = novoPreco;
+            ImagemURL = imagem;
+            DataAlteracao = DateTime.Now;
         }
     }
 }
