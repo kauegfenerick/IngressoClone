@@ -50,7 +50,7 @@ namespace IngressoMVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Atores}/{action=AtorListar}/{id?}");
+                    pattern: "{controller=Filmes}/{action=Index}/{id?}");
             });
             InicializadorDeDados.Inicializar(app);
         }

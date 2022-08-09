@@ -4,18 +4,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IngressoMVC.Models.ViewModels.Request
+namespace IngressoMVC.Models.ViewModels.RequestDTO
 {
     public class PostAtorDTO
     {
-        [Required(ErrorMessage = "Nome do ator é obrigatório")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Nome do ator deve ter entre 3 e 50 letras")]
-        [Display(Name = "Nome")]
+        [Required(ErrorMessage = "Nome do Ator é Obrigatório!")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Ator deve ter no máximo 50 caracters, e no mínimo 3")]
         public string Nome { get; set; }
-        [Required(ErrorMessage = "Foto do ator é obrigatória")]
-        [Display(Name = "URL da foto de perfil")]
-        public string FotoPerfilURL { get; set; }
-        [Display(Name = "Biografia")]
+
         public string Bio { get; set; }
+
+        [Required(ErrorMessage = "Imagem obrigatória")]
+        public string FotoPerfilURL { get; set; }
     }
 }

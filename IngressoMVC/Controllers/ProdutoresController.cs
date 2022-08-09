@@ -1,72 +1,104 @@
 ﻿using IngressoMVC.Data;
 using IngressoMVC.Models;
-using IngressoMVC.Models.ViewModels.Request;
+using IngressoMVC.Models.ViewModels.RequestDTO;
+using IngressoMVC.Models.ViewModels.ResponseDTO;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace IngressoMVC.Controllers
 {
     public class ProdutoresController : Controller
     {
         private IngressoDbContext _context;
+
         public ProdutoresController(IngressoDbContext context)
         {
             _context = context;
         }
-        [HttpGet]
-        public IActionResult ProdutorListar()
+
+        public IActionResult Index() => View(_context.Produtores);
+
+        public IActionResult Detalhes(int id)
         {
-            return View(_context.Produtores);
+            var resultado = _context.Produtores.Include(p => p.Filmes).FirstOrDefault(p => p.Id == id);
+
+            if (resultado == null)
+                return View("NotFound");
+
+            return View(resultado);
         }
-        public IActionResult ProdutorDetalhes(int id)
-        {
-            return View(_context.Produtores.Find(id));
-        }
-        public IActionResult ProdutorCriar()
+
+        public IActionResult Criar()
         {
             return View();
         }
+
         [HttpPost]
-        public IActionResult ProdutorCriar(PostProdutorDTO produtorDto)
+        public IActionResult Criar(PostProdutorDTO produtorDto)
         {
             if (!ModelState.IsValid)
-            {
                 return View(produtorDto);
-            }
-            Produtor produtor = new Produtor(produtorDto.Nome, produtorDto.FotoPerfilURL, produtorDto.Bio);
+
+            Produtor produtor = new Produtor(
+                produtorDto.Nome,
+                produtorDto.Bio,
+                produtorDto.FotoPerfilURL);
+
             _context.Produtores.Add(produtor);
             _context.SaveChanges();
-            return RedirectToAction(nameof(ProdutorListar));
+
+            return RedirectToAction(nameof(Index));
         }
-        public IActionResult ProdutorAtualizar(int id)
+
+        public IActionResult Atualizar(int? id)
         {
+            if (id == null)
+                return NotFound();
+
             var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
+
+            if (result == null)
+                return View();
+
             return View(result);
         }
+
         [HttpPost]
-        public IActionResult ProdutorAtualizar(int id, PostProdutorDTO produtorDto)
+        public IActionResult Atualizar(int id, PostProdutorDTO produtorDTO)
         {
-            var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
-            result.AtualizarDados(produtorDto.Nome,produtorDto.FotoPerfilURL,produtorDto.Bio);
-            _context.Produtores.Update(result);
+            var produtor = _context.Produtores.FirstOrDefault(p => p.Id == id);
+
+            if (!ModelState.IsValid)
+                return View(produtor);
+
+            produtor.AtualizarDados(produtorDTO.Nome, produtorDTO.Bio, produtorDTO.FotoPerfilURL);
+
+            _context.Update(produtor);
             _context.SaveChanges();
-            return RedirectToAction(nameof(ProdutorListar));
+
+            return RedirectToAction(nameof(Index));
         }
-        public IActionResult ProdutorDeletar(int id)
+
+        public IActionResult Deletar(int id)
         {
             var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
+
+            if (result == null)
+                return View();
+
             return View(result);
         }
+
         [HttpPost]
-        public IActionResult ProdutorDeletar(int id, PostProdutorDTO produtorDto)
+        public IActionResult ConfirmarDeletar(int id)
         {
             var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
+
             _context.Produtores.Remove(result);
             _context.SaveChanges();
-            return RedirectToAction(nameof(ProdutorListar));
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

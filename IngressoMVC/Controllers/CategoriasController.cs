@@ -1,89 +1,76 @@
 ﻿using IngressoMVC.Data;
 using IngressoMVC.Models;
-using IngressoMVC.Models.ViewModels.Request;
+using IngressoMVC.Models.ViewModels.RequestDTO;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace IngressoMVC.Controllers
 {
     public class CategoriasController : Controller
     {
         private IngressoDbContext _context;
+
         public CategoriasController(IngressoDbContext context)
         {
             _context = context;
         }
-        [HttpGet]
-        public IActionResult CategoriaListar()
-        {
-            return View(_context.Categorias);
-        }
-        public IActionResult CategoriaDetalhes(int id)
-        {
-            return View(_context.Categorias.Find(id));
-        }
-        public IActionResult CategoriaCriar()
-        {
-            return View();
-        }
+
+        public IActionResult Index() => View(_context.Categorias);
+
+        public IActionResult Detalhes(int id) => View(_context.Categorias.Find(id));
+
+        public IActionResult Criar() => View();
+
         [HttpPost]
-        public IActionResult CategoriaCriar(PostCategoriaDTO categoriaDto)
+        public IActionResult Criar(PostCategoriaDTO categoriaDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(categoriaDto);
-            }
+            if (!ModelState.IsValid) return View(categoriaDto);
             Categoria categoria = new Categoria(categoriaDto.Nome);
-            _context.Categorias.Add(categoria);
+            _context.Add(categoria);
             _context.SaveChanges();
-            return RedirectToAction(nameof(CategoriaListar));
+            return RedirectToAction(nameof(Index));
         }
-        public IActionResult CategoriaAtualizar(int id)
+
+        public IActionResult Atualizar(int? id)
         {
-            if (id == null)
-            {
-                return View();
-            }
+            if (id == null) return NotFound();
+
             var result = _context.Categorias.FirstOrDefault(a => a.Id == id);
-            if (result == null)
-            {
-                return View();
-            }
+
+            if (result == null) return View();
 
             return View(result);
         }
-         [HttpPost,ActionName("CategoriaAtualizar")]
-        public IActionResult CategoriaAtualizarConfirmar(int id, PostCategoriaDTO categoriaDto)
+
+        [HttpPost]
+        public IActionResult Atualizar(int id, PostCategoriaDTO categoriaDto)
         {
             var result = _context.Categorias.FirstOrDefault(a => a.Id == id);
+
+            if (!ModelState.IsValid) return View(result);
+
             result.AtualizarDados(categoriaDto.Nome);
             _context.Categorias.Update(result);
             _context.SaveChanges();
-            return RedirectToAction(nameof(CategoriaListar));
+
+            return RedirectToAction(nameof(Index));
         }
-        public IActionResult CategoriaDeletar(int id)
+
+        public IActionResult Deletar(int id)
         {
-            var result = _context.Categorias.FirstOrDefault(c => c.Id == id);
-            if (result == null)
-            {
-                return View("NotFound");
-            }
+            var result = _context.Categorias.FirstOrDefault(a => a.Id == id);
+            if (result == null) return View();
             return View(result);
         }
-        [HttpPost, ActionName("CategoriaDeletar")]
-        public IActionResult CategoriaDeletarConfirmar(int id)
+
+        [HttpPost]
+        public IActionResult ConfirmarDeletar(int id)
         {
-            var result = _context.Categorias.FirstOrDefault(c => c.Id == id);
-            if (result == null)
-            {
-                return View("NotFound");
-            }
+            var result = _context.Categorias.FirstOrDefault(a => a.Id == id);
             _context.Categorias.Remove(result);
             _context.SaveChanges();
-            return RedirectToAction(nameof(CategoriaListar));
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using IngressoMVC.Models.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IngressoMVC.Models
 {
@@ -24,15 +22,14 @@ namespace IngressoMVC.Models
         public string Descricao { get; private set; }
         public string LogoURL { get; private set; }
 
-        #region Relacionamentos
         public List<Filme> Filmes { get; set; }
-        #endregion
 
-         public void AtualizarDados(string nome, string descricao, string logoUrl)
+        public void AtualizarDados(string nome, string descricao, string logoURL)
         {
             Nome = nome;
             Descricao = descricao;
-            LogoURL = logoUrl;
+            LogoURL = logoURL;
+
             DataAlteracao = DateTime.Now;
         }
     }

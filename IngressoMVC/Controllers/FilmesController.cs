@@ -1,52 +1,79 @@
 ﻿using IngressoMVC.Data;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using IngressoMVC.Models.ViewModels.RequestDTO;
 using IngressoMVC.Models;
+using IngressoMVC.Models.ViewModels.RequestDTO;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace IngressoMVC.Controllers
 {
     public class FilmesController : Controller
     {
         private IngressoDbContext _context;
+
         public FilmesController(IngressoDbContext context)
         {
             _context = context;
         }
-        [HttpGet]
-        public IActionResult FilmeListar()
+
+        public IActionResult Index() => View(_context.Filmes);
+
+        public IActionResult Criar()
         {
-            return View(_context.Filmes);
+            var dadosDropdown = DadosDropdown();
+
+            ViewBag.Atores = new SelectList(dadosDropdown.Atores, "Id", "Nome");
+            ViewBag.Categorias = new SelectList(dadosDropdown.Categorias, "Id", "Nome");
+            ViewBag.Cinemas = new SelectList(dadosDropdown.Cinemas, "Id", "Nome");
+            ViewBag.Produtores = new SelectList(dadosDropdown.Produtores, "Id", "Nome");
+
+            return View();
         }
-        public IActionResult FilmeDetalhes(int id)
+
+        public PostFilmeDropdownDTO DadosDropdown()
         {
-            return View(_context.Filmes.Find(id));
+            var resp = new PostFilmeDropdownDTO()
+            {
+                Atores = _context.Atores.OrderBy(x => x.Nome).ToList(),
+                Categorias = _context.Categorias.OrderBy(x => x.Nome).ToList(),
+                Cinemas = _context.Cinemas.OrderBy(x => x.Nome).ToList(),
+                Produtores = _context.Produtores.OrderBy(x => x.Nome).ToList()
+            };
+
+            return resp;
         }
+
         [HttpPost]
-        public IActionResult FilmeCriar(PostFilmeDTO filmeDto)
+        public IActionResult Criar(PostFilmeDTO filmeDto)
         {
-            var cinema = _context.Cinemas.FirstOrDefault(c => c.Nome == filmeDto.NomeCinema);
-            if (cinema == null) return View();
+            if (!ModelState.IsValid)
+            {
+                var dadosDropdown = DadosDropdown();
 
-            var produtor = _context.Produtores.FirstOrDefault(p => p.Nome == filmeDto.NomePodutor);
-            if (produtor == null) return View();
+                ViewBag.Atores = new SelectList(dadosDropdown.Atores, "Id", "Nome");
+                ViewBag.Categorias = new SelectList(dadosDropdown.Categorias, "Id", "Nome");
+                ViewBag.Cinemas = new SelectList(dadosDropdown.Cinemas, "Id", "Nome");
+                ViewBag.Produtores = new SelectList(dadosDropdown.Produtores, "Id", "Nome");
 
-             Filme filme = new Filme
+                return View();
+            }
+
+            Filme filme = new Filme
                 (
                     filmeDto.Titulo,
                     filmeDto.Descricao,
                     filmeDto.Preco,
-                    filmeDto.ImageURL,
-                    _context.Produtores.FirstOrDefault(x => x.Id == filmeDto.ProdutorId).Id
+                    filmeDto.ImagemURL,
+                    filmeDto.ProdutorId,
+                    filmeDto.CinemaId,
+                    filmeDto.DataLancamento,
+                    filmeDto.DataEncerramento
                 );
 
             _context.Add(filme);
             _context.SaveChanges();
 
-            //Incluir Relacionamentos
             foreach (var categoriaId in filmeDto.CategoriasId)
             {
                 var novaCategoria = new FilmeCategoria(filme.Id, categoriaId);
@@ -63,41 +90,74 @@ namespace IngressoMVC.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult FilmeAtualizar(int id)
+
+        public IActionResult Atualizar(int id)
         {
             var result = _context.Filmes.FirstOrDefault(x => x.Id == id);
+
             if (result == null)
-            {
                 return View("NotFound");
-            }
+
             return View(result);
         }
+
         [HttpPost]
-        public IActionResult FilmeAtualizar(int id, PostFilmeDTO filmeDto)
+        public IActionResult Atualizar(int id, PostFilmeDTO filmeDto)
         {
             var result = _context.Filmes.FirstOrDefault(x => x.Id == id);
 
             if (!ModelState.IsValid)
-            {
                 return View(result);
-            }
-            result.AlterarDados(filmeDto.Titulo,filmeDto.Descricao,filmeDto.Preco,filmeDto.ImageURL);
+
+            result.AlterarDados
+                (
+                filmeDto.Titulo,
+                filmeDto.Descricao,
+                filmeDto.Preco,
+                filmeDto.ImagemURL,
+                filmeDto.ProdutorId,
+                filmeDto.CinemaId,
+                filmeDto.DataEncerramento,
+                filmeDto.DataEncerramento
+                );
+
             _context.Update(result);
             _context.SaveChanges();
-            return RedirectToAction(nameof(FilmeListar));
+
+            return RedirectToAction(nameof(Detalhes), result);
         }
-        public IActionResult FilmeDeletar(int id)
+
+        public IActionResult Deletar(int id)
         {
-            var result = _context.Filmes.FirstOrDefault(x=> x.Id == id);
+            var result = _context.Filmes.FirstOrDefault(x => x.Id == id);
+
+            if (result == null)
+                return View("NotFound");
+
             return View(result);
         }
-        [HttpPost,ActionName("FilmeDeletar")]
-        public IActionResult FilmeDeletarConfirmar(int id)
+
+        [HttpPost, ActionName("Deletar")]
+        public IActionResult ConfirmarDeletar(int id)
         {
-            var result = _context.Filmes.FirstOrDefault(x=> x.Id == id);
-            _context.Filmes.Remove(result);
+            var result = _context.Filmes.FirstOrDefault(x => x.Id == id);
+
+            _context.Remove(result);
             _context.SaveChanges();
-            return RedirectToAction(nameof(FilmeListar));
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Detalhes(int id)
+        {
+            var result = _context.Filmes
+                .Include(p => p.Produtor)
+                .Include(c => c.Cinema)
+                .Include(fc => fc.FilmesCategorias).ThenInclude(c => c.Categoria)
+                .Include(af => af.AtoresFilmes).ThenInclude(a => a.Ator)
+                .FirstOrDefault(f => f.Id == id);
+
+            return View(result);
         }
     }
 }

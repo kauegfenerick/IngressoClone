@@ -1,85 +1,101 @@
 ﻿using IngressoMVC.Data;
 using IngressoMVC.Models;
-using IngressoMVC.Models.ViewModels.Request;
+using IngressoMVC.Models.ViewModels.RequestDTO;
+using IngressoMVC.Models.ViewModels.ResponseDTO;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace IngressoMVC.Controllers
 {
     public class AtoresController : Controller
     {
         private IngressoDbContext _context;
+
         public AtoresController(IngressoDbContext context)
         {
             _context = context;
         }
-        [HttpGet]
-        public IActionResult AtorListar() 
+
+        public IActionResult Index()
         {
             return View(_context.Atores);
         }
-        public IActionResult AtorDetalhes(int id)
+
+        public IActionResult Detalhes(int id)
         {
-            return View(_context.Atores.Find(id));
+            var resultado = _context.Atores
+                .Include(af => af.AtoresFilmes)
+                .ThenInclude(f => f.Filme)
+                .FirstOrDefault(ator => ator.Id == id);
+
+            if (resultado == null)
+                return View("NotFound");
+
+            return View(resultado);
         }
-        public IActionResult AtorCriar()
-        {
-            return View();
-        }
+
+        public IActionResult Criar() => View();
+
         [HttpPost]
-        public IActionResult AtorCriar(PostAtorDTO atorDto)
+        public IActionResult Criar(PostAtorDTO atorDto)
         {
             if (!ModelState.IsValid)
-            {
                 return View(atorDto);
-            }
-            Ator ator = new Ator(atorDto.Nome, atorDto.FotoPerfilURL, atorDto.Bio);
+
+            Ator ator = new Ator(atorDto.Nome, atorDto.Bio, atorDto.FotoPerfilURL);
             _context.Atores.Add(ator);
             _context.SaveChanges();
-            return RedirectToAction(nameof(AtorListar));
+
+            return RedirectToAction(nameof(Index));
         }
-        public IActionResult AtorAtualizar(int id)
+
+        public IActionResult Atualizar(int? id)
         {
             if (id == null)
-            {
-                return View("NotFound");
-            }
+                return NotFound();
+
             var result = _context.Atores.FirstOrDefault(a => a.Id == id);
+
             if (result == null)
-            {
                 return View();
-            }
 
             return View(result);
         }
-        [HttpPost,ActionName("AtorAtualizar")]
-        public IActionResult AtorAtualizarConfirmar(int id, PostAtorDTO atorDto)
+
+        [HttpPost]
+        public IActionResult Atualizar(int id, PostAtorDTO atorDto)
         {
-            var result = _context.Atores.FirstOrDefault(a => a.Id == id);
-            result.AtualizarDados(atorDto.Nome, atorDto.FotoPerfilURL,atorDto.Bio);
-            _context.Atores.Update(result);
+            var ator = _context.Atores.FirstOrDefault(a => a.Id == id);
+
+            if (!ModelState.IsValid)
+                return View(ator);
+
+            ator.AtualizarDados(atorDto.Nome, atorDto.Bio, atorDto.FotoPerfilURL);
+
+            _context.Update(ator);
             _context.SaveChanges();
-            return RedirectToAction(nameof(AtorListar));
+
+            return RedirectToAction(nameof(Index));
         }
-        public IActionResult AtorDeletar(int id)
+
+        public IActionResult Deletar(int id)
         {
             var result = _context.Atores.FirstOrDefault(a => a.Id == id);
-            if (result == null)
-            {
-                return View();
-            }
+
+            if (result == null) return View();
+
             return View(result);
         }
-        [HttpPost]
-        public IActionResult AtorConfirmarDeletar(int id)
+
+        [HttpPost, ActionName("Deletar")]
+        public IActionResult ConfirmarDeletar(int id)
         {
             var result = _context.Atores.FirstOrDefault(a => a.Id == id);
             _context.Atores.Remove(result);
             _context.SaveChanges();
-            return RedirectToAction(nameof(AtorListar));
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

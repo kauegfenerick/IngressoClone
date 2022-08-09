@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace IngressoMVC.Models
 {
     public class Produtor : Artista
     {
-        public Produtor(string nome, string fotoPerfilURL, string bio) : base(nome, fotoPerfilURL, bio)
+        public Produtor(string nome, string bio, string fotoPerfilURL)
+            : base(nome, bio, fotoPerfilURL)
         {
         }
-        #region Relacionamentos
+
         public List<Filme> Filmes { get; set; }
-        #endregion
     }
 }

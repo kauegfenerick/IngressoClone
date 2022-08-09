@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IngressoMVC.Migrations
 {
     [DbContext(typeof(IngressoDbContext))]
-    [Migration("20220520005106_inicial")]
-    partial class inicial
+    [Migration("20220809231601_Inicial")]
+    partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -125,6 +125,12 @@ namespace IngressoMVC.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataEncerramento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataLancamento")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")

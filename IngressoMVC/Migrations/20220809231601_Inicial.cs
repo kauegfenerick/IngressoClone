@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IngressoMVC.Migrations
 {
-    public partial class inicial : Migration
+    public partial class Inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,8 +16,8 @@ namespace IngressoMVC.Migrations
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FotoPerfilURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FotoPerfilURL = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,8 +65,8 @@ namespace IngressoMVC.Migrations
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FotoPerfilURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FotoPerfilURL = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,6 +85,8 @@ namespace IngressoMVC.Migrations
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ImagemURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DataLancamento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataEncerramento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CinemaId = table.Column<int>(type: "int", nullable: false),
                     ProdutorId = table.Column<int>(type: "int", nullable: false)
                 },

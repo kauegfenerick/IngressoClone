@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace IngressoMVC.Models.ViewModels.Request
+namespace IngressoMVC.Models.ViewModels.RequestDTO
 {
     public class PostCinemaDTO
     {
-        [Display(Name ="Nome")]
-        [Required(ErrorMessage ="O cinema deve ter um nome")]
+        [Required, StringLength(100, MinimumLength = 1, ErrorMessage = "Nome do cinema é obrigatório")]
         public string Nome { get; set; }
-        [Display(Name = "Descrição")]
-        public string Descricacao { get; set; }
-        [Required(ErrorMessage ="O cinema deve possuir uma logo")]
-        [Display(Name = "URL da Logo")]
+
+        public string Descricao { get; set; }
+
+        [Required(ErrorMessage = "A LOGO do Cinema é obrigatória")]
         public string LogoURL { get; set; }
     }
 }
